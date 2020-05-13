@@ -42,7 +42,7 @@ int main(void)
    gpio_init_structure.Pin = GPIO_PIN_14;
    gpio_init_structure.Pull = GPIO_NOPULL;
    gpio_init_structure.Speed = GPIO_SPEED_FREQ_HIGH;
-   gpio_init_structure.Mode = GPIO_MODE_IT_RISING_FALLING;
+   gpio_init_structure.Mode = GPIO_MODE_IT_FALLING;
    HAL_GPIO_Init(GPIOA, &gpio_init_structure);
 
    HAL_NVIC_SetPriority((IRQn_Type) EXTI14_IRQn, 0x01, 0x00);

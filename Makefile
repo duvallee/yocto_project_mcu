@@ -28,12 +28,17 @@ TARGET      = stm32mp_m4_CM4
 # -----------------------------------------------------------------------------
 # tool
 # -----------------------------------------------------------------------------
-
-RMDIR       = RMDIR /S /Q
-MKDIR       = mkdir
+# RMDIR       = rmdir /S /Q
+RMDIR       := rm -rf
+MKDIR       := mkdir
 SLASH_CHAR  =/
 BACKSLASH_CHAR =\\
 MKDIR_OPT   = 2> NUL || echo off
+
+# -----------------------------------------------------------------------------
+# must be define SHELL variable(very important)
+# -----------------------------------------------------------------------------
+SHELL := cmd
 
 # -----------------------------------------------------------------------------
 # variable for cpu
@@ -71,6 +76,7 @@ C_DEFS     += -Wall
 C_DEFS     += -fstack-usage
 # Generate dependency information
 C_DEFS     += -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)"
+
 # definition of st
 C_DEFS     += -DUSE_HAL_DRIVER -DSTM32MP157Cxx -DCORE_CM4
 
@@ -89,11 +95,11 @@ AS_DEFS    += $(MCU) --specs=nano.specs $(OPT)
 AS_INCLUDES = 
 # C
 C_INCLUDES  = 
-C_INCLUDES += -I./Drivers/STM32MP1xx_HAL_Driver/Inc/Legacy
-C_INCLUDES += -I./Drivers/CMSIS/Include
-C_INCLUDES += -I./Drivers/CMSIS/Device/ST/STM32MP1xx/Include
-C_INCLUDES += -I./Drivers/STM32MP1xx_HAL_Driver/Inc
-C_INCLUDES += -I./Core/Inc
+C_INCLUDES += -IDrivers/STM32MP1xx_HAL_Driver/Inc/Legacy
+C_INCLUDES += -IDrivers/CMSIS/Include
+C_INCLUDES += -IDrivers/CMSIS/Device/ST/STM32MP1xx/Include
+C_INCLUDES += -IDrivers/STM32MP1xx_HAL_Driver/Inc
+C_INCLUDES += -ICore/Inc
 
 # -----------------------------------------------------------------------------
 # variable for link
@@ -111,7 +117,7 @@ ASLAGS      = $(AS_DEFS) $(AS_INCLUDES)
 
 LDLAGS      = $(MCU) -T"$(LDSCRIPT)"
 LDLAGS     += --specs=nosys.specs
-LDLAGS     += -Wl,-Map="stm32mp_m4_CM4.map"
+LDLAGS     += -Wl,-Map="$(BUILD_DIR)/stm32mp_m4_CM4.map"
 LDLAGS     += -Wl,--gc-sections -static --specs=nano.specs 
 LDLAGS     += -Wl,--start-group
 LDLAGS     += $(LIBS)
@@ -122,30 +128,32 @@ LDLAGS     += -Wl,--end-group
 # -----------------------------------------------------------------------------
 C_SOURCES   =
 # HAL Libary
-C_SOURCES  += ./Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal.c
-C_SOURCES  += ./Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_cortex.c
-C_SOURCES  += ./Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_dma.c
-C_SOURCES  += ./Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_dma_ex.c
-C_SOURCES  += ./Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_exti.c
-C_SOURCES  += ./Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_gpio.c
-C_SOURCES  += ./Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_hsem.c
-C_SOURCES  += ./Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_mdma.c
-C_SOURCES  += ./Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_pwr.c
-C_SOURCES  += ./Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_pwr_ex.c
-C_SOURCES  += ./Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_rcc.c
-C_SOURCES  += ./Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_rcc_ex.c
-C_SOURCES  += ./Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_tim.c
-C_SOURCES  += ./Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_tim_ex.c
+C_SOURCES  += Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal.c
+C_SOURCES  += Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_cortex.c
+C_SOURCES  += Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_dma.c
+C_SOURCES  += Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_dma_ex.c
+C_SOURCES  += Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_exti.c
+C_SOURCES  += Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_gpio.c
+C_SOURCES  += Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_hsem.c
+C_SOURCES  += Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_mdma.c
+C_SOURCES  += Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_pwr.c
+C_SOURCES  += Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_pwr_ex.c
+C_SOURCES  += Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_rcc.c
+C_SOURCES  += Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_rcc_ex.c
+C_SOURCES  += Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_tim.c
+C_SOURCES  += Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_tim_ex.c
 
 # common
-C_SOURCES  += ./Common/System/system_stm32mp1xx.c
+C_SOURCES  += Common/System/system_stm32mp1xx.c
 
 # User Source
-C_SOURCES  += ./Core/Src/main.c
-C_SOURCES  += ./Core/Src/stm32mp1xx_hal_msp.c
-C_SOURCES  += ./Core/Src/stm32mp1xx_it.c
-C_SOURCES  += ./Core/Src/syscalls.c
-C_SOURCES  += ./Core/Src/sysmem.c
+C_SOURCES  += Core/Src/main.c
+C_SOURCES  += Core/Src/stm32mp1xx_hal_msp.c
+C_SOURCES  += Core/Src/stm32mp1xx_it.c
+C_SOURCES  += Core/Src/syscalls.c
+C_SOURCES  += Core/Src/sysmem.c
+
+C_SOURCES  += Core/scheduler/scheduler.c
 
 # -----------------------------------------------------------------------------
 # ASM source
@@ -155,14 +163,8 @@ ASM_SOURCES = Core/Startup/startup_stm32mp157cacx.s
 # -----------------------------------------------------------------------------
 # OBJECT Files
 OBJS      :=
-# OBJS      += $(C_SOURCES:%.c=$(BUILD_DIR)/%.o)
-# OBJS      += $(ASM_SOURCES:%.s=$(BUILD_DIR)/%.o)
-
-OBJS      += $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
-vpath %.c $(sort $(dir $(C_SOURCES)))
-# list of ASM program objects
-OBJS      += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
-vpath %.s $(sort $(dir $(ASM_SOURCES)))
+OBJS      += $(C_SOURCES:%.c=$(BUILD_DIR)/%.o)
+OBJS      += $(ASM_SOURCES:%.s=$(BUILD_DIR)/%.o)
 
 # -----------------------------------------------------------------------------
 #
@@ -170,46 +172,43 @@ vpath %.s $(sort $(dir $(ASM_SOURCES)))
 .PHONY: $(TARGET) clean
 
 # =============================================================================
-#
+# Build
 # =============================================================================
 all: $(TARGET)
-	@echo "build success !!!"
 
+
+# =============================================================================
+# target
+# =============================================================================
 $(TARGET): $(OBJS)
-	$(CC) $(OBJS) $(LDFLAGS) -o $@
-	$(CC) -o "$(BUILD_DIR)/$(TARGET).elf" $(OBJS) $(LFLAGS)
+	$(CC) -o "$(BUILD_DIR)/$(TARGET).elf" $(OBJS) $(LDLAGS)
+	$(OBJCOPY) -O ihex "$(BUILD_DIR)/$(TARGET).elf" "$(BUILD_DIR)/$(TARGET).hex"
+	$(OBJCOPY) -O binary "$(BUILD_DIR)/$(TARGET).elf" "$(BUILD_DIR)/$(TARGET).bin"
+	@echo =======================================================================================
+	$(SIZE) "$(BUILD_DIR)/$(TARGET).elf"
+	@echo =======================================================================================
 
 clean:
-	$(RMDIR) $(BUILD_DIR)
-	@echo "clean success !!!"
+	rm -rf $(BUILD_DIR)
+
 
 # =============================================================================
 # Implicit targets
 # =============================================================================
-$(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
-	@echo "$@"
+$(BUILD_DIR)/%.o: %.c
+	@$(MKDIR) $(subst $(SLASH_CHAR),$(BACKSLASH_CHAR),$(dir $@)) $(MKDIR_OPT)
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/%.oo: %.cpp Makefile | $(BUILD_DIR) 
-	@echo "$@"
-	$(CXX) $(CXXFLAGS) $< -o $@
+# $(BUILD_DIR)/%.oo: %.cpp
+#	@$(MKDIR) $(subst $(SLASH_CHAR),$(BACKSLASH_CHAR),$(dir $@)) $(MKDIR_OPT)
+#	$(CC) $(CFLAGS) $< -o $@
 	
-$(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR) 
-	@echo "$@"
-	$(CC) $(AFLAGS) $< -o $@
+$(BUILD_DIR)/%.o: %.s
+	@$(MKDIR) $(subst $(SLASH_CHAR),$(BACKSLASH_CHAR),$(dir $@)) $(MKDIR_OPT)
+	$(CC) $(ASLAGS) $< -o $@
 
-$(BUILD_DIR)/%.o: %.S Makefile | $(BUILD_DIR) 
-	@echo "$@"
-	$(CC) $(AFLAGS) $< -o $@
-
-$(BUILD_DIR):
-	@$(MKDIR) $@		
-
-
-
-
-
-
-
+$(BUILD_DIR)/%.o: %.S
+	@$(MKDIR) $(subst $(SLASH_CHAR),$(BACKSLASH_CHAR),$(dir $@)) $(MKDIR_OPT)
+	$(CC) $(ASLAGS) $< -o $@
 
 

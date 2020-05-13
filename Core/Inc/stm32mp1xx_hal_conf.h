@@ -1,22 +1,11 @@
-/**
-  ******************************************************************************
-  * @file    stm32mp1xx_hal_conf.h
-  * @brief   HAL configuration file.
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
-  */ 
+/*
+ * File: stm32mp1xx_hal_conf.h
+ *       HAL configuration file.
+ *
+ * Written by duvallee.lee in 2020
+ *
+ */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef STM32MP1xx_HAL_CONF_H
 #define STM32MP1xx_HAL_CONF_H
 
@@ -24,13 +13,6 @@
  extern "C" {
 #endif
 
-/* Exported types ------------------------------------------------------------*/
-/* Exported constants --------------------------------------------------------*/
-
-/* ########################## Module Selection ############################## */
-/**
-  * @brief This is the list of modules to be used in the HAL driver 
-  */
 #define HAL_MODULE_ENABLED  
 /*#define HAL_ADC_MODULE_ENABLED   */
 /*#define HAL_CEC_MODULE_ENABLED   */
@@ -393,4 +375,4 @@
 
 #endif /* STM32MP1xx_HAL_CONF_H */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
